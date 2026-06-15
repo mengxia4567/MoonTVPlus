@@ -9,9 +9,9 @@ on:
         default: 'latest'
         type: string
   push:
-    branches: [ main, master ]
+    branches: [ release/mx ]
   pull_request:
-    branches: [ main, master ]
+    branches: [ release/mx ]
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
