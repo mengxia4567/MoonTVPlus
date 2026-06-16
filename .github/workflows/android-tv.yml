@@ -1,17 +1,19 @@
 name: Build Android TV APK
 
 on:
+  push:
+    branches: [ release/mx ]
   workflow_dispatch:
     inputs:
       base_url:
         description: '服务端 Base URL，不需要带 /tv，例如 https://example.com 或 http://192.168.1.10:3000'
         required: true
-        default: 'http://192.168.1.10:3000'
+        default: 'https://live.137621.xyz'
         type: string
       app_name:
         description: 'Android TV 应用名称'
         required: true
-        default: 'MoonTVPlus TV'
+        default: '个人观影 TV'
         type: string
       version_name:
         description: '版本名'
