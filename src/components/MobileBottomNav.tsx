@@ -2,7 +2,7 @@
 
 'use client';
 
-import { Blend, Cat, Clover, Container, Film, Globe, Home, Star, Tv, TvMinimalPlay, Users } from 'lucide-react';
+import { Blend, Cat, Clover, Container, Film, Globe, Home, Music, Star, Tv, TvMinimalPlay, Users } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
@@ -93,6 +93,15 @@ const MobileBottomNav = ({ activePath }: MobileBottomNavProps) => {
               icon: TvMinimalPlay,
               label: '电视直播',
               href: '/live',
+            },
+          ]
+        : []),
+      ...(runtimeConfig?.MUSIC_ENABLED
+        ? [
+            {
+              icon: Music,
+              label: '音乐',
+              href: '/music',
             },
           ]
         : []),

@@ -1,17 +1,19 @@
 name: Build Android TV APK
 
 on:
+  push:
+    branches: [ release/mx ]
   workflow_dispatch:
     inputs:
       base_url:
         description: '服务端 Base URL，不需要带 /tv，例如 https://example.com 或 http://192.168.1.10:3000'
         required: true
-        default: 'http://192.168.1.10:3000'
+        default: 'https://example.com'
         type: string
       app_name:
         description: 'Android TV 应用名称'
         required: true
-        default: 'MoonTVPlus TV'
+        default: '个人观影 TV'
         type: string
       version_name:
         description: '版本名'
@@ -116,10 +118,10 @@ jobs:
       - name: Build APK
         working-directory: apps/android-tv
         env:
-          BASE_URL: ${{ inputs.base_url }}
-          APP_NAME: ${{ inputs.app_name }}
-          VERSION_NAME: ${{ inputs.version_name }}
-          VERSION_CODE: ${{ inputs.version_code }}
+          BASE_URL: ${{ github.event.inputs.base_url || 'https://example.com' }}
+          APP_NAME: ${{ github.event.inputs.app_name || '个人观影 TV' }}
+          VERSION_NAME: ${{ github.event.inputs.version_name || '1.0.0' }}
+          VERSION_CODE: ${{ github.event.inputs.version_code || '1' }}
           MIN_SDK: ${{ matrix.min_sdk }}
           ANDROID_KEYSTORE_PATH: /tmp/android-tv-release.keystore
           ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
@@ -138,13 +140,13 @@ jobs:
           mkdir -p /tmp/android-tv-apks
           cp \
             "apps/android-tv/app/build/outputs/apk/${{ matrix.flavor }}/${{ steps.signing.outputs.build_type }}/app-${{ matrix.flavor }}-${{ steps.signing.outputs.apk_suffix }}.apk" \
-            "/tmp/android-tv-apks/moontvplus-tv-${{ inputs.version_name }}-${{ matrix.label }}-${{ steps.signing.outputs.artifact_suffix }}.apk"
+            "/tmp/android-tv-apks/moontvplus-tv-${{ github.event.inputs.version_name || '1.0.0' }}-${{ matrix.label }}-${{ steps.signing.outputs.artifact_suffix }}.apk"
           ls -lh /tmp/android-tv-apks
 
       - name: Upload APK artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: moontvplus-android-tv-${{ inputs.version_name }}-${{ matrix.label }}
+          name: moontvplus-android-tv-${{ github.event.inputs.version_name || '1.0.0' }}-${{ matrix.label }}
           path: /tmp/android-tv-apks/*.apk
           if-no-files-found: error
           retention-days: 30

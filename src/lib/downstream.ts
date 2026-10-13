@@ -85,12 +85,20 @@ async function searchWithCache(
           const title_url_array = url.split('#');
           title_url_array.forEach((title_url: string) => {
             const episode_title_url = title_url.split('$');
-            if (
-              episode_title_url.length === 2 &&
-              episode_title_url[1].endsWith('.m3u8')
-            ) {
-              matchTitles.push(episode_title_url[0]);
-              matchEpisodes.push(episode_title_url[1]);
+            if (episode_title_url.length === 2) {
+              const epUrl = episode_title_url[1].trim();
+              if (epUrl.endsWith('.m3u8')) {
+                matchTitles.push(episode_title_url[0]);
+                matchEpisodes.push(epUrl);
+              } else if (
+                /^https?:\/\//i.test(epUrl) &&
+                !/\.(mp4|flv|mkv)($|[?#])/i.test(epUrl) &&
+                !(epUrl.split('?')[0].split('/').pop() || '').includes('.')
+              ) {
+                // 兼容 CMS「分享页」格式：https://host/play/<token> → 实际流为该地址 + /index.m3u8
+                matchTitles.push(episode_title_url[0]);
+                matchEpisodes.push(epUrl.replace(/[?#].*$/, '').replace(/\/+$/, '') + '/index.m3u8');
+              }
             }
           });
           if (matchEpisodes.length > episodes.length) {
@@ -251,12 +259,20 @@ export async function getDetailFromApi(
       const title_url_array = url.split('#');
       title_url_array.forEach((title_url: string) => {
         const episode_title_url = title_url.split('$');
-        if (
-          episode_title_url.length === 2 &&
-          episode_title_url[1].endsWith('.m3u8')
-        ) {
-          matchTitles.push(episode_title_url[0]);
-          matchEpisodes.push(episode_title_url[1]);
+        if (episode_title_url.length === 2) {
+          const epUrl = episode_title_url[1].trim();
+          if (epUrl.endsWith('.m3u8')) {
+            matchTitles.push(episode_title_url[0]);
+            matchEpisodes.push(epUrl);
+          } else if (
+            /^https?:\/\//i.test(epUrl) &&
+            !/\.(mp4|flv|mkv)($|[?#])/i.test(epUrl) &&
+            !(epUrl.split('?')[0].split('/').pop() || '').includes('.')
+          ) {
+            // 兼容 CMS「分享页」格式：https://host/play/<token> → 实际流为该地址 + /index.m3u8
+            matchTitles.push(episode_title_url[0]);
+            matchEpisodes.push(epUrl.replace(/[?#].*$/, '').replace(/\/+$/, '') + '/index.m3u8');
+          }
         }
       });
       if (matchEpisodes.length > episodes.length) {
@@ -336,12 +352,20 @@ export async function getDetailFromApiV2(
       const titleUrlArray = url.split('#');
       titleUrlArray.forEach((titleUrl: string) => {
         const episodeTitleUrl = titleUrl.split('$');
-        if (
-          episodeTitleUrl.length === 2 &&
-          episodeTitleUrl[1].endsWith('.m3u8')
-        ) {
-          matchTitles.push(episodeTitleUrl[0]);
-          matchEpisodes.push(episodeTitleUrl[1]);
+        if (episodeTitleUrl.length === 2) {
+          const epUrl = episodeTitleUrl[1].trim();
+          if (epUrl.endsWith('.m3u8')) {
+            matchTitles.push(episodeTitleUrl[0]);
+            matchEpisodes.push(epUrl);
+          } else if (
+            /^https?:\/\//i.test(epUrl) &&
+            !/\.(mp4|flv|mkv)($|[?#])/i.test(epUrl) &&
+            !(epUrl.split('?')[0].split('/').pop() || '').includes('.')
+          ) {
+            // 兼容 CMS「分享页」格式：https://host/play/<token> → 实际流为该地址 + /index.m3u8
+            matchTitles.push(episodeTitleUrl[0]);
+            matchEpisodes.push(epUrl.replace(/[?#].*$/, '').replace(/\/+$/, '') + '/index.m3u8');
+          }
         }
       });
       if (matchEpisodes.length > episodes.length) {

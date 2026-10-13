@@ -2,7 +2,7 @@
 
 'use client';
 
-import { Blend, Cat, Clover, Container, Film, Globe, Home, Menu, Search, Star, Tv, TvMinimalPlay, Users } from 'lucide-react';
+import { Blend, Cat, Clover, Container, Film, Globe, Home, Menu, Music, Search, Star, Tv, TvMinimalPlay, Users } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname, useSearchParams } from 'next/navigation';
 import {
@@ -192,6 +192,15 @@ const Sidebar = ({ onToggle, activePath = '/' }: SidebarProps) => {
               icon: TvMinimalPlay,
               label: '电视直播',
               href: '/live',
+            },
+          ]
+        : []),
+      ...(runtimeConfig?.MUSIC_ENABLED
+        ? [
+            {
+              icon: Music,
+              label: '音乐',
+              href: '/music',
             },
           ]
         : []),
